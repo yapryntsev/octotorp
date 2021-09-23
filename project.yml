@@ -1,0 +1,55 @@
+name: Octotorp
+
+configs:
+  Debug: debug
+  Debug-Optimized: release
+
+options:
+  bundleIdPrefix: com.yapryntsev
+  deploymentTarget:
+    iOS: 15.0
+  groupSortPosition: bottom
+  defaultConfig: Debug
+
+settings:
+  base:
+    ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES: $(inherited)
+    CODE_SIGN_IDENTITY: iPhone Developer
+    CODE_SIGN_STYLE: Automatic
+    DEFINES_MODULE: YES
+    INFOPLIST_FILE: Sources/Application/Plists/Info.plist
+    PRODUCT_BUNDLE_IDENTIFIER: com.yapryntsev.octotorp
+    TARGETED_DEVICE_FAMILY: 1
+    XCODEGEN_STATE: YES
+  configs:
+    Debug-Optimized:
+      ONLY_ACTIVE_ARCH: YES
+      ENABLE_TESTABILITY: YES
+    Debug:
+      ENABLE_TESTABILITY: YES
+
+packages:
+  SnapKit:
+    url: https://github.com/SnapKit/SnapKit.git
+    exactVersion: 5.0.0
+  PromiseKit:
+    url: https://github.com/mxcl/PromiseKit
+    exactVersion: 7.0.0-rc1
+  Alamofire:
+    url: https://github.com/Alamofire/Alamofire.git
+    exactVersion: 5.0.0
+
+targets:
+  Octotorp:
+    type: application
+    platform: iOS
+    developmentLanguage: ru
+    sources: Sources
+    dependencies:
+      - package: SnapKit
+      - package: Alamofire
+      - package: PromiseKit
+    scheme: {}
+    preBuildScripts:
+      - name: SwiftLint
+        script: ./Scripts/swiftlint.sh
