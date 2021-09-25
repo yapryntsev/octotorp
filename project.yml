@@ -38,6 +38,9 @@ packages:
   Alamofire:
     url: https://github.com/Alamofire/Alamofire.git
     exactVersion: 5.0.0
+  SkeletonView:
+    url: https://github.com/Juanpe/SkeletonView.git
+    branch: main
 
 targets:
   Octotorp:

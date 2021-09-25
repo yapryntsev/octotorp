@@ -2,6 +2,10 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Для построения маршрутов</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>Для помощи в следовании по маршруту</string>
 	<key>LSApplicationQueriesSchemes</key>
 	<string>instagram-stories</string>
 	<key>CFBundleDevelopmentRegion</key>
