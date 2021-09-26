@@ -31,12 +31,6 @@ struct SearchResultItem: Decodable {
         case point
     }
 
-    // TODO: убрать
-    init(name: String) {
-        self.name = name
-        coodinate = .init()
-    }
-
     init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         name = try values.decode(String.self, forKey: .name)

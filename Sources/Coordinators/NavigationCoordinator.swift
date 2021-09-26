@@ -15,6 +15,16 @@ final class NavigationCoordinator: ICoordinator {
         showSearch()
     }
 
+    func start(transitionHandler: IRootContainer?, route: Route?) {
+        guard let route = route else {
+            return start(transitionHandler: transitionHandler)
+        }
+        self.transitionHandler = transitionHandler
+        self.transitionHandler?.hideHub(animated: true)
+        
+        showNavigationAnnouncement(for: route)
+    }
+
     // MARK: - Private
 
     private func showSearch() {

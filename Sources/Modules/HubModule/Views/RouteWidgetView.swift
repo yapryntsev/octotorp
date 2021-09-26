@@ -16,7 +16,7 @@ final class RouteWidgetView: UIView {
     // UI
     private lazy var imageView: UIImageView = {
         let imageView = UIImageView()
-        imageView.contentMode = .scaleAspectFit
+        imageView.contentMode = .scaleAspectFill
         imageView.backgroundColor = UIColor.styleGuide.c200
         imageView.cornerRadius(.baseRadius, mask: true)
         return imageView
@@ -73,6 +73,7 @@ extension RouteWidgetView: Configurable {
     func configure(with model: HubItemModel) {
         titleLabel.text = model.title
         subtitleLabel.text = model.subtitle
+        imageView.image = model.image
     }
 }
 

@@ -27,6 +27,9 @@ final class GloblMapView: MKMapView {
         return GlobalMapUserLocationTracker(owner: self)
     }()
 
+    // Dependencies
+    weak var colorProvider: IColorProivder?
+
     // MARK: - Initialization
 
     init() {
@@ -93,6 +96,13 @@ final class GloblMapView: MKMapView {
             polylineRenderer.lineJoin = .bevel
 
             return polylineRenderer
+        }
+
+        if let polygon = overlay as? MKHexagon {
+            let renderer = MKPolygonRenderer(polygon: polygon)
+            renderer.fillColor = colorProvider?.color(for: polygon)
+
+            return renderer
         }
 
         return MKOverlayRenderer(overlay: overlay)

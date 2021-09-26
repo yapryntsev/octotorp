@@ -18,11 +18,11 @@ final class HubCoordinator: ICoordinator {
 
     // MARK: - Private
 
-    private func startNavigationCoordinator() {
+    private func startNavigationCoordinator(route: Route? = nil) {
         let coordinator = NavigationCoordinator()
         child = coordinator
 
-        coordinator.start(transitionHandler: transitionHandler)
+        coordinator.start(transitionHandler: transitionHandler, route: route)
     }
 
     private func showAchievementsCoordinator() {
@@ -37,8 +37,8 @@ final class HubCoordinator: ICoordinator {
                 self?.startNavigationCoordinator()
             case .award:
                 break
-            case .route(_):
-                break
+            case .route(let route):
+                self?.startNavigationCoordinator(route: route)
             }
         }
 

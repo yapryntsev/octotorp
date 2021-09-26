@@ -6,7 +6,7 @@
 import UIKit
 
 extension String {
-    static let graphhopperKey = "1b65a66f-97e8-448d-a80a-e9694ffa5306"
+    static let graphhopperKey = "Ваш ключ"
 }
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {

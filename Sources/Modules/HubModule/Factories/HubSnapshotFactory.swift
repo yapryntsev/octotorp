@@ -24,7 +24,7 @@ final class HubSnapshotFactory: IHubSnapshotFactory {
         )], toSection: .search)
 
         let hubModels = recommended.map { item -> HubItemModel in
-            return .init(image: nil, title: item.title, subtitle: item.subtitle)
+            return .init(image: item.image, title: item.title, subtitle: item.subtitle)
         }
         snapshot.appendItems(hubModels, toSection: .routes)
 

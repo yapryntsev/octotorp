@@ -7,10 +7,18 @@ import UIKit
 import MapKit
 
 protocol IGloblMapView: UIViewController {
+    func healthMap(overlays: [(UIColor, MKHexagon)])
     func configure(with model: GlobalMapState)
 }
 
+protocol IColorProivder: AnyObject {
+    func color(for overlay: MKHexagon) -> UIColor
+}
+
 final class GlobalMapViewController: UIViewController, IGloblMapView {
+
+    // Properties
+    private var healthMapItems = [(UIColor, MKHexagon)]()
 
     // Dependencies
     private let presenter: IGlobalMapPresenter
@@ -18,6 +26,7 @@ final class GlobalMapViewController: UIViewController, IGloblMapView {
     // UI
     private lazy var map: GloblMapView = {
         let map = GloblMapView()
+        map.colorProvider = self
         return map
     }()
 
@@ -74,9 +83,25 @@ final class GlobalMapViewController: UIViewController, IGloblMapView {
     }
 }
 
+// MARK: - IColorProivder
+
+extension GlobalMapViewController: IColorProivder {
+
+    func color(for overlay: MKHexagon) -> UIColor {
+        let item = healthMapItems.first(where: { $0.1 == overlay })
+        return item!.0
+    }
+}
+
 // MARK: - Configurable
 
 extension GlobalMapViewController: Configurable {
+
+    func healthMap(overlays: [(UIColor, MKHexagon)]) {
+        healthMapItems = overlays
+        let overlays = healthMapItems.map { $0.1 }
+        map.addOverlays(overlays, level: .aboveRoads)
+    }
 
     func configure(with state: GlobalMapState) {
         map.mapType = state.mapType
@@ -89,6 +114,12 @@ extension GlobalMapViewController: Configurable {
 
         map.removeOverlays(map.overlays)
         map.removeAnnotations(map.annotations)
+
+        if state.shouldShowHealthMap {
+            let overlays = healthMapItems.map { $0.1 }
+            map.addOverlays(overlays, level: .aboveRoads)
+        }
+
 
         if let route = state.route {
 

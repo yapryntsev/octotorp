@@ -13,6 +13,7 @@ struct GlobalMapState {
     let userTrackingMode: MKUserTrackingMode
     let isUserTrackingButtonVisible: Bool
     let isUserInteractionEnabled: Bool
+    let shouldShowHealthMap: Bool
     let route: Route?
 }
 
@@ -35,6 +36,7 @@ final class GlobalMapStateFactory: IGlobalMapStateFactory {
             userTrackingMode: .none,
             isUserTrackingButtonVisible: true,
             isUserInteractionEnabled: true,
+            shouldShowHealthMap: true,
             route: nil
         )
     }
@@ -48,6 +50,7 @@ final class GlobalMapStateFactory: IGlobalMapStateFactory {
             userTrackingMode: .none,
             isUserTrackingButtonVisible: false,
             isUserInteractionEnabled: false,
+            shouldShowHealthMap: false,
             route: nil
         )
     }
@@ -61,6 +64,7 @@ final class GlobalMapStateFactory: IGlobalMapStateFactory {
             userTrackingMode: .followWithHeading,
             isUserTrackingButtonVisible: true,
             isUserInteractionEnabled: true,
+            shouldShowHealthMap: true,
             route: route
         )
     }
@@ -74,6 +78,7 @@ final class GlobalMapStateFactory: IGlobalMapStateFactory {
             userTrackingMode: MKUserTrackingMode.none,
             isUserTrackingButtonVisible: true,
             isUserInteractionEnabled: true,
+            shouldShowHealthMap: false,
             route: route
         )
     }
@@ -87,6 +92,7 @@ final class GlobalMapStateFactory: IGlobalMapStateFactory {
             userTrackingMode: MKUserTrackingMode.none,
             isUserTrackingButtonVisible: false,
             isUserInteractionEnabled: false,
+            shouldShowHealthMap: false,
             route: route
         )
     }

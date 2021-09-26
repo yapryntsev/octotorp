@@ -23,6 +23,8 @@ final class GlobalMapAssembly {
 
     private func presenter() -> GlobalMapPresenter {
         let stateFactory = GlobalMapStateFactory()
-        return GlobalMapPresenter(stateFactory: stateFactory)
+        let healthService = MapHealthService()
+
+        return GlobalMapPresenter(stateFactory: stateFactory, healthService: healthService)
     }
 }

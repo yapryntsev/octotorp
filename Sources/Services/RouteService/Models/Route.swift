@@ -40,10 +40,21 @@ struct Route: Decodable {
         }
     }
 
-    enum Transport {
+    enum Transport: String, RawRepresentable {
         case walking
         case scooter
         case bike
+
+        var request: String {
+            switch self {
+            case .walking:
+                return "foot"
+            case .scooter:
+                return "scooter"
+            case .bike:
+                return "bike"
+            }
+        }
     }
 
     let steps: [Step]
@@ -51,7 +62,7 @@ struct Route: Decodable {
 
     let distance: CLLocationDistance
     let travelTime: TimeInterval
-    let transport: Route.Transport
+    var transport: Route.Transport
 
     enum CodingKeys: String, CodingKey {
         case instructions
@@ -64,37 +75,28 @@ struct Route: Decodable {
         let values = try decoder.container(keyedBy: CodingKeys.self)
 
         distance = try values.decode(Double.self, forKey: .distance)
-        travelTime = try values.decode(Double.self, forKey: .time)
+        travelTime = try values.decode(Double.self, forKey: .time) / 1000
 
-        let coordinates = try values.decode(CoordinatesResponse.self, forKey: .points)
+        let coordinates = try values.decode(CoordinatesResponse.self, forKey: .points).coordinates
         let instructions = try values.decode([InstructionsResponse].self, forKey: .instructions)
 
-        steps = coordinates.coordinates.enumerated().map { item in
-            let end = item.element.indices.contains(1) ? item.element[1] : item.element[0]
+
+        steps = instructions.map { instruction -> Step in
+            let slice = Array(coordinates[instruction.interval[0]...instruction.interval[1]])
             return .init(
-                start: item.element[0],
-                end: end,
-                polyline: .init(coordinates: item.element, count: item.element.count),
-                sign: 1, // instructions[item.offset + 1].sign,
+                start: coordinates[instruction.interval[0]],
+                end: coordinates[instruction.interval[1]],
+                polyline: .init(coordinates: slice, count: slice.count),
+                sign: instruction.sign,
                 notice: nil,
-                instruction: "instructions[item.offset + 1].text",
-                travelTime: 1, // instructions[item.offset].time,
-                distance: 1 // instructions[item.offset].distance
+                instruction: instruction.text,
+                travelTime: instruction.time,
+                distance: instruction.distance
             )
         }
 
-        let flatCoordinates = coordinates.coordinates.flatMap { $0 }
-        polyline = .init(coordinates: flatCoordinates, count: flatCoordinates.count)
-
-        transport = .scooter
-    }
-
-    init() {
-        steps = []
-        polyline = .init()
-        distance = 0
-        travelTime = 0
-        transport = .scooter
+        polyline = .init(coordinates: coordinates, count: coordinates.count)
+        transport = .bike
     }
 }
 
@@ -103,10 +105,11 @@ struct InstructionsResponse: Decodable {
     let sign: Int
     let text: String
     let time: Double
+    let interval: [Int]
 }
 
 struct CoordinatesResponse: Decodable {
-    let coordinates: [[CLLocationCoordinate2D]]
+    let coordinates: [CLLocationCoordinate2D]
 
     enum CodingKeys: String, CodingKey {
         case coordinates
@@ -116,17 +119,9 @@ struct CoordinatesResponse: Decodable {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         let raw = try values.decode([[Double]].self, forKey: .coordinates)
 
-        var coordinates = [[CLLocationCoordinate2D]](
-            repeating: [],
-            count: Int(Double(Double(raw.count) / 2.0).rounded(.up))
-        )
-
-        raw.enumerated().forEach { item in
-            let index: Int = item.offset / 2
-            coordinates[index].append(.init(latitude: item.element[1], longitude: item.element[0]))
+        coordinates =  raw.map { item in
+            return .init(latitude: item[1], longitude: item[0])
         }
-
-        self.coordinates = coordinates
     }
 
 }

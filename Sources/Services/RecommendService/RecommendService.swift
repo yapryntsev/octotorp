@@ -5,6 +5,7 @@
 
 import Foundation
 import PromiseKit
+import UIKit
 
 protocol IRecommendService {
     func recommendedRoutes() -> Promise<[RecommendedRoute]>
@@ -22,8 +23,8 @@ final class RecommendService: IRecommendService {
 
     private func getMocks() -> [RecommendedRoute] {
         let additionalInfo = [
-            (title: "Прогулки в лесу", subtitle: "Битцевский лес"),
-            (title: "Москва с высоты", subtitle: "Воробьевы горы")
+            (title: "Прогулки в лесу", subtitle: "Битцевский лес", image: UIImage(named: "BIZ")),
+            (title: "Москва с высоты", subtitle: "Воробьевы горы", image: UIImage(named: "MSU"))
         ]
 
         let item: [RecommendedRoute] = (1...2)
@@ -42,6 +43,7 @@ final class RecommendService: IRecommendService {
                 return .init(
                     title: info.title,
                     subtitle: info.subtitle,
+                    image: info.image,
                     route: tuple.element.paths.first!
                 )
             }
